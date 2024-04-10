@@ -22,11 +22,11 @@ def signup(request):
             user = form.save(commit=False)
             user.username = user.username.lower()
             user.token=str(uuid.uuid4())
-            # utils.send_email_token(user.email,user.token)
+            utils.send_email_token(user.email,user.token)
             user.save()
             login(request, user)
             request.session['user_email']=user.email
-            return redirect('storepage')
+            return redirect('chat')
         else:
             return render(request, 'signup.html', {'form': form})
 
@@ -36,7 +36,7 @@ def verify(request,token):
     if user:
         user.is_authenticated=True
         user.save()
-        return redirect('storepage')
+        return redirect('chat')
     else:
         return HttpResponse("Invalid token")
     
@@ -54,7 +54,7 @@ def login_view(request):
             if flag:
                 request.session['user_email']=user.email
                 
-                return redirect('storepage')
+                return redirect('chat')
             else:
                 error_msg="wrong email or password"
                 
@@ -64,4 +64,8 @@ def login_view(request):
         
         
         return render(request, 'login.html', {'error': error_msg})
-    
+
+def logout_view(request):
+    print("done")
+    logout(request)
+    return redirect('login')

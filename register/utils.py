@@ -7,7 +7,7 @@ def send_email_token(email,token):
         
         subject = 'welcome to Ecom5  world'
         # print("hello")
-        message = f'Hi,click on the given link to verify http://127.0.0.1:8000/signup/verify/{token}/'
+        message = f'Hi,click on the given link to verify http://127.0.0.1:8000/verify/{token}/'
         # print("jell")
         email_from = settings.EMAIL_HOST_USER
         recipient_list = [email]

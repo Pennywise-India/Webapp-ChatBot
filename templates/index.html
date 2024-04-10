@@ -1,0 +1,83 @@
+
+{%extends 'base.html'%}
+
+{% block Body %}
+    
+<div class="container mt-5 position-relative">
+    <div class="chat-container" id="chat-container">
+        <div id="message-block">
+            <div class="chat-message">
+                <p class="user-message">Hello! How can I assist you today?</p>
+            </div>
+            <!-- Previous chat messages go here -->
+            <!-- Example -->
+            <div class="chat-message">
+                <p class="user-message">User's message here</p>
+            </div>
+            <!-- Bot's reply -->
+            <div class="chat-message">
+                <p>Hello! I'm a reply from the bot.</p>
+            </div>
+        </div>
+    
+            <div class="chat-message ">
+                <div class="input-group mb-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="submit-icon"><i class="fa fa-send"></i></span>
+                    </div>
+                    <input type="text" class="form-control" id="input-text" placeholder="Enter text here...">                                    
+                </div>
+            </div>
+        
+    </div>
+</div>
+<script>
+		var message="";
+		document.getElementById('submit-icon').onclick = function(){
+            var message=document.getElementById("input-text").value;
+            document.getElementById('message-block').innerHTML+=`<div class="chat-message">
+                <p class="user-message">${message}</p>
+            </div>`;
+            document.getElementById("input-text").value="";
+
+            console.log(message);
+            chatSocket.send(
+                JSON.stringify({
+                    text: message,
+                })
+            );
+        }
+
+        var wss_protocol = window.location.protocol == "https:" ? "wss://" : "ws://";
+        var chatSocket = new WebSocket(
+            wss_protocol + window.location.host + "/ws/chat/"
+        );
+
+        
+    
+
+        chatSocket.onopen = function (e) {
+            console.log("connection established");
+        };
+
+        chatSocket.onmessage = function (e) {
+            var data = JSON.parse(e.data);
+            console.log(data);
+
+          
+        };
+
+        chatSocket.onclose = function (e) {
+            alert("Socket closed unexpectedly, please reload the page.");
+        };
+
+       
+
+        
+    
+
+        
+    
+</script>
+    
+{% endblock %}
