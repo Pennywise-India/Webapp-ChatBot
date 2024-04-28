@@ -52,7 +52,7 @@ def login_view(request):
         if user:
             flag = check_password(password, user.password)
             if flag:
-                request.session['user_email']=user.email
+                login(request,user)
                 
                 return redirect('chat')
             else:

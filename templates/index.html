@@ -5,38 +5,98 @@
     
 <div class="container mt-5 position-relative">
     <div class="chat-container" id="chat-container">
-        <div id="message-block">
-            <div class="chat-message">
-                <p class="user-message">Hello! How can I assist you today?</p>
-            </div>
-            <!-- Previous chat messages go here -->
-            <!-- Example -->
-            <div class="chat-message">
-                <p class="user-message">User's message here</p>
-            </div>
-            <!-- Bot's reply -->
-            <div class="chat-message">
-                <p>Hello! I'm a reply from the bot.</p>
-            </div>
-        </div>
+        
     
-            <div class="chat-message ">
+            <div class="chat-message-input ">
                 <div class="input-group mb-0">
+                    <input type="text" class="form-control" id="input-text" placeholder="Enter text here...">   
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="submit-icon"><i class="fa fa-send"></i></span>
                     </div>
-                    <input type="text" class="form-control" id="input-text" placeholder="Enter text here...">                                    
+                                                     
                 </div>
+            </div>
+            <div class="chat-button" id="chat-buttons">
+                <div class="button-row">
+                    <button type="button" class="btn btn-outline-secondary p-3" id="faq-1" >What is the defense budget of 2019</button>
+                    <button type="button" class="btn btn-outline-secondary p-3" id="faq-2">What is Budget</button>
+                </div>
+                
+                <div class="button-row">
+                    <button type="button" class="btn btn-outline-secondary p-3" id="faq-3">How much was the defense budget for 2018</button>
+                    <button type="button" class="btn btn-outline-secondary p-3" id="faq-4">Was their any progress with the medical budget in 2017</button>
+                </div>
+            </div>
+            <div id="message-block">
+                {% comment %} <div class="chat-message">
+                    <p >DevBot:  Hello! How can I assist you today?</p>
+                </div> {% endcomment %}
+                {% comment %} <!-- Previous chat messages go here -->
+                <!-- Example -->
+                <div class="chat-message">
+                    <p class="user-message">User's message here</p>
+                </div>
+                <!-- Bot's reply -->
+                <div class="chat-message">
+                    <p>Hello! I'm a reply from the bot.</p>
+                </div> {% endcomment %}
             </div>
         
     </div>
 </div>
 <script>
 		var message="";
+        
+        function handleClick(buttonId) {
+            console.log("Button clicked! ID:", buttonId);
+            var message=document.getElementById(buttonId).innerText;
+            console.log(message)
+            document.getElementById('chat-buttons').style.display = 'none';
+            document.getElementById('message-block').innerHTML+=`<div class="chat-message">
+                <p >You:  ${message}</p>
+            </div>`;
+            chatSocket.send(
+                JSON.stringify({
+                    text: message,
+                })
+            );
+            
+        }
+        
+        var button1 = document.getElementById('faq-1');
+        button1.addEventListener('click', function() {
+            handleClick(this.id);
+        });
+
+        var button2 = document.getElementById('faq-2');
+        button2.addEventListener('click', function() {
+            handleClick(this.id);
+        });
+
+        var button3 = document.getElementById('faq-3');
+        button3.addEventListener('click', function() {
+            handleClick(this.id);
+        });
+
+        var button4 = document.getElementById('faq-4');
+        button4.addEventListener('click', function() {
+            handleClick(this.id);
+        });
+        
+        
+{% comment %} 
+        document.getElementById('faq').onclick=function(){
+            var faq_button=document.getElementById('chat-buttons');
+            document.getElementById('chat-buttons').style.display = 'none';
+            console.log(faq_button.innerText)
+        } {% endcomment %}
+
+
 		document.getElementById('submit-icon').onclick = function(){
+            document.getElementById('chat-buttons').style.display = 'none';
             var message=document.getElementById("input-text").value;
             document.getElementById('message-block').innerHTML+=`<div class="chat-message">
-                <p class="user-message">${message}</p>
+                <p >You:  ${message}</p>
             </div>`;
             document.getElementById("input-text").value="";
 
@@ -63,6 +123,10 @@
         chatSocket.onmessage = function (e) {
             var data = JSON.parse(e.data);
             console.log(data);
+            document.getElementById('message-block').innerHTML+=`<div class="chat-message">
+                <p >DevBot:  ${data['message']}</p>
+            </div>`;
+
 
           
         };
